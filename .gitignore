@@ -1,0 +1,32 @@
+# CMake build directories and generated files
+build*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Compiler output
+*.exe
+*.dll
+*.obj
+*.o
+*.lib
+*.pdb
+
+# The project depends on the bundled raylib binaries.
+!vendor/**/*.dll
+!vendor/**/*.lib
+
+# Editors and local tooling
+.cache/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Operating system files
+.DS_Store
+Thumbs.db
