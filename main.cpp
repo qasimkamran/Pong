@@ -1,40 +1,45 @@
+#include "pong.hpp"
 #include "raylib.h"
 
 #include "src/internal/paddle.hpp"
+#include "src/internal/player.hpp"
 
 int main() {
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    Game game(800, 600, 60);
 
-    InitWindow(screenWidth, screenHeight, "Raylib Test - CMake Setup");
-    SetTargetFPS(60);
+    Vector2 resolution = game.GetGameResolution();
 
-    Paddle paddle(0, 0, 100, 50, GREEN);
-    const Color paddleColors[] = {RED, BLUE, ORANGE, PURPLE, GREEN};
-    int colorIndex = 0;
-    double lastColorChange = GetTime();
+    InitWindow(static_cast<int>(resolution.x), static_cast<int>(resolution.y), "Pong");
+    SetTargetFPS(game.GetGameFPS());
 
-    while (!WindowShouldClose()) {
-        if (GetTime() - lastColorChange >= 3.0) {
-            paddle.ColorPaddle(paddleColors[colorIndex]);
-            colorIndex = (colorIndex + 1) % 5;
-            lastColorChange = GetTime();
-        }
+    Vector2 p1Start = game.GetP1Start();
+    Vector2 p2Start = game.GetP2Start();
 
+    Paddle paddle1(p1Start.x, p1Start.y, PADDLE_WIDTH, PADDLE_HEIGHT, GREEN);
+    Paddle paddle2(p2Start.x, p2Start.y, PADDLE_WIDTH, PADDLE_HEIGHT, RED);
+
+    Player p1(PlayerType::P1, paddle1);
+    Player p2(PlayerType::CPU, paddle2);
+
+    p1.AssignPlayerMovementKeys(KEY_LEFT, KEY_RIGHT);
+
+    constexpr const char* title = "Pong!";
+    constexpr int titleFontSize = 20;
+    const int titleX = (static_cast<int>(resolution.x) - MeasureText(title, titleFontSize)) / 2;
+    const int titleY = (static_cast<int>(resolution.y) - titleFontSize) / 2;
+
+    while (!WindowShouldClose())
+    {
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            DrawText("If you see this, Raylib is working!", 190, 200, 20, LIGHTGRAY);
-            paddle.SetPaddlePosition(
-                GetMouseX() - paddle.GetWidth() / 2,
-                GetMouseY() - paddle.GetHeight() / 2
-            );
-            paddle.RenderPaddle();
-            DrawText("Move your mouse around!", 300, 300, 20, DARKGRAY);
+            DrawText(title, titleX, titleY, titleFontSize, LIGHTGRAY);
+            p1.Update();
+            p1.Render();
+
+            p2.Update();
+            p2.Render();
         EndDrawing();
     }
-
     CloseWindow();
-
     return 0;
 }
-

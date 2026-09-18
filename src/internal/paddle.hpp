@@ -5,27 +5,30 @@
 class Paddle
 {
 public:
-    Paddle(int x, int y, int width, int height, Color color)
+    Paddle(float x, float y, float width, float height, Color color)
         : startX_(x), startY_(y), posX_(x), posY_(y),
           width_(width), height_(height), color_(color) {}
 
     void RenderPaddle() const;
     void ColorPaddle(Color color);
-    void MovePaddle(int deltaX, int deltaY);
-    void SetPaddlePosition(int x, int y);
+    void MovePaddle(float deltaX, float deltaY);
+    void SetPaddlePosition(float x, float y);
     void Reset();
 
-    int GetX() const { return posX_; }
-    int GetY() const { return posY_; }
-    int GetWidth() const { return width_; }
-    int GetHeight() const { return height_; }
-
+    float GetX() const { return posX_; }
+    float GetY() const { return posY_; }
+    float GetWidth() const { return width_; }
+    float GetHeight() const { return height_; }
+    Vector4 GetBoundingBox() const { return { posX_, posY_, posX_ + width_, posY_ + height_ }; }
 private:
-    int startX_;
-    int startY_;
-    int posX_;
-    int posY_;
-    int width_;
-    int height_;
+    float startX_;
+    float startY_;
+
+    float posX_;
+    float posY_;
+
+    float width_;
+    float height_;
+
     Color color_;
 };

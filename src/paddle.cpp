@@ -1,8 +1,10 @@
 #include "internal/paddle.hpp"
 
+#include <algorithm>
+
 void Paddle::RenderPaddle() const
 {
-    DrawRectangle(posX_, posY_, width_, height_, color_);
+    DrawRectangleRec({posX_, posY_, width_, height_}, color_);
 }
 
 void Paddle::ColorPaddle(Color color)
@@ -10,15 +12,18 @@ void Paddle::ColorPaddle(Color color)
     color_ = color;
 }
 
-void Paddle::MovePaddle(int deltaX, int deltaY)
+void Paddle::MovePaddle(float deltaX, float deltaY)
 {
     SetPaddlePosition(posX_ + deltaX, posY_ + deltaY);
 }
 
-void Paddle::SetPaddlePosition(int x, int y)
+void Paddle::SetPaddlePosition(float x, float y)
 {
-    posX_ = x;
-    posY_ = y;
+    const float maxX = std::max(0.0f, static_cast<float>(GetScreenWidth()) - width_);
+    const float maxY = std::max(0.0f, static_cast<float>(GetScreenHeight()) - height_);
+
+    posX_ = std::clamp(x, 0.0f, maxX);
+    posY_ = std::clamp(y, 0.0f, maxY);
 }
 
 void Paddle::Reset()
